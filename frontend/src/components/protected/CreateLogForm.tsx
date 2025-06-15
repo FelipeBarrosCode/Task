@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { LogLevel, LogFormat } from '../../types/enums';
+import { useNavigate } from 'react-router';
 
 interface CreateLogFormProps {
   isOpen: boolean;
@@ -23,6 +24,7 @@ const CreateLogForm: React.FC<CreateLogFormProps> = ({
   onLogCreated, 
   onError 
 }) => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<CreateLogData>({
     level: LogLevel.INFO,
     service: '',
@@ -94,6 +96,10 @@ const CreateLogForm: React.FC<CreateLogFormProps> = ({
     } catch (err) {
       let errorMessage = 'Failed to create log';
       if (axios.isAxiosError(err)) {
+        if (err.response?.status && err.response.status >= 401) {
+          localStorage.removeItem('token');
+          navigate('/login');
+        }
         errorMessage = err.response?.data?.detail || err.message;
       }
       setError(errorMessage);

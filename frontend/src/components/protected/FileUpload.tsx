@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router';
 
 interface FileUploadProps {
   isOpen: boolean;
@@ -23,7 +24,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, onUploadSucces
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>('');
   const fileInputRef = useRef<HTMLInputElement>(null);
-
+  const navigate = useNavigate();
   const validateFile = (file: File): string | null => {
     const allowedTypes = ['.log', '.txt', '.json', '.jsonl'];
     const maxSize = 5 * 1024 * 1024; // 5MB in bytes
@@ -89,6 +90,10 @@ const FileUpload: React.FC<FileUploadProps> = ({ isOpen, onClose, onUploadSucces
     } catch (err) {
       let errorMessage = 'Upload failed';
       if (axios.isAxiosError(err)) {
+        if (err.response?.status && err.response.status >= 401) {
+          localStorage.removeItem('token');
+          navigate('/login');
+        }
         errorMessage = err.response?.data?.detail || err.message;
       }
       setError(errorMessage);

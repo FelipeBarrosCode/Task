@@ -107,6 +107,7 @@ const GeneralDisplay: React.FC = () => {
         if (status === 404) {
           setError('Log not found.');
         } else if (status === 401 || status === 403) {
+          localStorage.removeItem('token');
           navigate('/login');
         } else if (status && status >= 400) {
           setError('Failed to fetch log data. Please try again.');
@@ -173,6 +174,7 @@ const GeneralDisplay: React.FC = () => {
       const status = axiosError.response?.status;
 
       if (status && status >= 400) {
+        localStorage.removeItem('token');
         navigate('/login');
       } else {
         setError('Failed to update log. Please try again.');
@@ -215,6 +217,7 @@ const GeneralDisplay: React.FC = () => {
       const status = axiosError.response?.status;
 
       if (status === 401 || status === 403) {
+        localStorage.removeItem('token');
         navigate('/login');
       } else {
         setError('Failed to delete log. Please try again.');
