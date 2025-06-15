@@ -1,0 +1,64 @@
+services:
+  frontend:
+    build: 
+      context: ./frontend
+      target: production
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    env_file:
+      - ./frontend/.env
+    profiles: ["prod"]
+
+  frontend-dev:
+    build: 
+      context: ./frontend
+      target: development
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend-dev
+    env_file:
+      - ./frontend/.env
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    profiles: ["dev"]
+
+  backend:
+    build: 
+      context: ./backendAtNode
+      target: production
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backendAtNode/.env
+    profiles: ["prod"]
+
+  backend-dev:
+    build: 
+      context: ./backendAtNode
+      target: development
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongo
+    env_file:
+      - ./backendAtNode/.env
+    volumes:
+      - ./backendAtNode:/app
+      - /app/node_modules
+    profiles: ["dev"]
+
+  mongo:
+    image: mongo:7
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data-dev:/data/db
+    profiles: ["dev"]
+
+volumes:
+  mongo-data-dev:
+

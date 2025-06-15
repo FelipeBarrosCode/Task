@@ -1,0 +1,6 @@
+{"timestamp":"2025-06-08T18:01:00Z","source":"web-server","format":"CLF","client_ip":"192.168.1.15","user_id":"-","request":"GET /index.html HTTP/1.1","status":200,"size":1024}
+{"timestamp":"2025-06-08T18:01:01Z","source":"web-server","format":"CLF","client_ip":"203.0.113.42","user_id":"-","request":"POST /login HTTP/1.1","status":401,"size":512}
+{"timestamp":"2025-06-08T18:01:30Z","source":"nginx","format":"NGINX-ERROR","level":"error","pid":1423,"tid":0,"message":"connect() failed (111: Connection refused) while connecting to upstream","client":"198.51.100.17","request":"GET /api/data HTTP/1.1"}
+{"timestamp":"2025-06-08T18:02:10Z","source":"nginx","format":"NGINX-ERROR","level":"warn","pid":1423,"tid":0,"message":"upstream server temporarily disabled while retrying","client":"198.51.100.17","request":"POST /api/upload HTTP/1.1"}
+{"timestamp":"2025-06-08T18:03:00Z","source":"syslog","format":"SYSLOG","facility":"auth","severity":"notice","hostname":"host-01","app_name":"sshd","pid":1547,"message":"Accepted publickey for user1 from 10.0.0.5 port 54321 ssh2"}
+{"timestamp":"2025-06-08T18:03:15Z","source":"syslog","format":"SYSLOG","facility":"daemon","severity":"info","hostname":"host-02","app_name":"cron","pid":867,"message":"(root) CMD (run-parts /etc/cron.hourly)"}
