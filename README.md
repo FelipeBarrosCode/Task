@@ -29,31 +29,62 @@ A comprehensive log management system built with React frontend, Node.js backend
 
 ### Development Environment Setup
 
+**Important: You must create environment files before starting the services.**
+
 ```bash
-# Clone the repository and start development services
+# 1. Create frontend environment file
+echo "VITE_API_URL=http://localhost:8000" > frontend/.env
+
+# 2. Create backend environment file
+cat > backendAtNode/.env << 'EOF'
+PORT=8000
+NODE_ENV=development
+MONGODB_URI=mongodb://mongo:27017/logs_db
+JWT_SECRET=your-development-secret-key-change-this
+JWT_EXPIRE_MINUTES=60
+ALLOWED_ORIGINS=http://localhost:5173,http://frontend:5173
+EOF
+
+# 3. Start development services
 docker compose --profile dev up --build
 ```
 
-This command will:
+This will:
 1. Build the frontend React application in development mode with hot reload
 2. Build the backend Node.js API in development mode with nodemon
 3. Start MongoDB for local development
 4. Configure networking between all services
-5. Set up environment variables automatically
+5. Load environment variables from the .env files you created
 6. Mount source code for live reloading
 
 ### Production Environment Setup
 
+**Important: You must create environment files and configure external MongoDB before starting production services.**
+
 ```bash
-# Start production services (no MongoDB included)
+# 1. Create frontend environment file for production
+echo "VITE_API_URL=https://your-api-domain.com" > frontend/.env
+
+# 2. Create backend environment file for production
+cat > backendAtNode/.env << 'EOF'
+PORT=8000
+NODE_ENV=production
+MONGODB_URI=mongodb://your-production-mongo-host:27017/logs_db
+JWT_SECRET=your-production-256-bit-secret-key-very-secure
+JWT_EXPIRE_MINUTES=60
+ALLOWED_ORIGINS=https://your-frontend-domain.com
+EOF
+
+# 3. Start production services (no MongoDB included)
 docker compose --profile prod up --build
 ```
 
-This command will:
+This will:
 1. Build the frontend React application for production and serve static files
 2. Build the backend Node.js API optimized for production
 3. Use external MongoDB (configured via environment variables)
-4. Optimize containers for production deployment
+4. Load environment variables from the .env files you created
+5. Optimize containers for production deployment
 
 ### Access the Application
 
@@ -86,9 +117,22 @@ The system uses Docker Compose profiles for environment separation:
 
 ## 📚 Docker Commands Reference
 
+**Note: Make sure to create the required .env files before running any Docker commands.**
+
 ### Development Commands
 
 ```bash
+# Create environment files first (required)
+echo "VITE_API_URL=http://localhost:8000" > frontend/.env
+cat > backendAtNode/.env << 'EOF'
+PORT=8000
+NODE_ENV=development
+MONGODB_URI=mongodb://mongo:27017/logs_db
+JWT_SECRET=your-development-secret-key-change-this
+JWT_EXPIRE_MINUTES=60
+ALLOWED_ORIGINS=http://localhost:5173,http://frontend:5173
+EOF
+
 # Start development environment
 docker compose --profile dev up
 
@@ -111,6 +155,17 @@ docker compose --profile dev down -v
 ### Production Commands
 
 ```bash
+# Create production environment files first (required)
+echo "VITE_API_URL=https://your-api-domain.com" > frontend/.env
+cat > backendAtNode/.env << 'EOF'
+PORT=8000
+NODE_ENV=production
+MONGODB_URI=mongodb://your-production-mongo-host:27017/logs_db
+JWT_SECRET=your-production-256-bit-secret-key-very-secure
+JWT_EXPIRE_MINUTES=60
+ALLOWED_ORIGINS=https://your-frontend-domain.com
+EOF
+
 # Start production environment
 docker compose --profile prod up
 
@@ -246,22 +301,29 @@ ALLOWED_ORIGINS=http://localhost:5173,http://frontend:5173
 - Source code mounting for live changes
 - Debug logging enabled
 
-**Setup:**
+**Setup (Required Steps):**
 ```bash
-# Create environment files
+# Step 1: Create frontend environment file
 echo "VITE_API_URL=http://localhost:8000" > frontend/.env
+
+# Step 2: Create backend environment file
 cat > backendAtNode/.env << 'EOF'
 PORT=8000
 NODE_ENV=development
 MONGODB_URI=mongodb://mongo:27017/logs_db
-JWT_SECRET=your-development-secret-key
+JWT_SECRET=your-development-secret-key-change-this
 JWT_EXPIRE_MINUTES=60
 ALLOWED_ORIGINS=http://localhost:5173,http://frontend:5173
 EOF
 
-# Start development environment
+# Step 3: Start development environment
 docker compose --profile dev up --build
 ```
+
+**Important Notes:**
+- The `.env` files are **required** and must be created manually
+- Make sure to change the JWT_SECRET to a secure value
+- The MongoDB URI uses the Docker service name `mongo` for container communication
 
 ### Production Environment
 
@@ -272,10 +334,12 @@ docker compose --profile dev up --build
 - Production logging
 - Security optimizations
 
-**Setup:**
+**Setup (Required Steps):**
 ```bash
-# Create production environment files
+# Step 1: Create frontend environment file
 echo "VITE_API_URL=https://your-api-domain.com" > frontend/.env
+
+# Step 2: Create backend environment file
 cat > backendAtNode/.env << 'EOF'
 PORT=8000
 NODE_ENV=production
@@ -285,9 +349,17 @@ JWT_EXPIRE_MINUTES=60
 ALLOWED_ORIGINS=https://your-frontend-domain.com
 EOF
 
-# Start production environment
+# Step 3: Start production environment
 docker compose --profile prod up --build -d
 ```
+
+**Important Notes:**
+- The `.env` files are **required** and must be created manually
+- Replace `your-api-domain.com` with your actual API domain
+- Replace `your-frontend-domain.com` with your actual frontend domain
+- Replace `your-production-mongo-host` with your actual MongoDB host
+- Use a strong, unique JWT_SECRET (256-bit recommended)
+- Production environment does **not** include MongoDB container
 
 ## 🔒 Security Features
 
@@ -372,6 +444,20 @@ docker compose --profile prod up --build -d
    ```bash
    # Check if .env files exist
    ls -la frontend/.env backendAtNode/.env
+   
+   # If files don't exist, create them:
+   # Frontend .env file
+   echo "VITE_API_URL=http://localhost:8000" > frontend/.env
+   
+   # Backend .env file
+   cat > backendAtNode/.env << 'EOF'
+   PORT=8000
+   NODE_ENV=development
+   MONGODB_URI=mongodb://mongo:27017/logs_db
+   JWT_SECRET=your-development-secret-key-change-this
+   JWT_EXPIRE_MINUTES=60
+   ALLOWED_ORIGINS=http://localhost:5173,http://frontend:5173
+   EOF
    
    # Rebuild with environment variables
    docker compose --profile dev up --build
