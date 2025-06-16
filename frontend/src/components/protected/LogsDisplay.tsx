@@ -71,8 +71,6 @@ const LogsDisplay: React.FC = () => {
       setLoading(true);
       setError(null);
 
-       
-      
       const token = localStorage.getItem('token');
       const userRole = jwtDecode<JwtPayload>(token!);
       setUserRole(userRole.role);     
@@ -107,6 +105,16 @@ const LogsDisplay: React.FC = () => {
         }
       );
       console.log('Response data:', response.data);
+
+      // If we get an empty logs array and we're not on the first page,
+      // reset to first page and fetch again
+      if (response.data.logs.length === 0 && searchFilters.offset > 0) {
+        setSearchFilters(prev => ({
+          ...prev,
+          offset: 0
+        }));
+        return; // This will trigger another fetch due to the useEffect
+      }
 
       setLogsData({
         logs: response.data.logs,
@@ -190,11 +198,10 @@ const LogsDisplay: React.FC = () => {
             <h3 className="text-lg font-semibold text-red-900 mb-2">Error Loading Logs</h3>
             <p className="text-red-700 text-center mb-4">{error}</p>
             <button
-              onClick={()=> {setSearchFilters({
-                limit: 10,
-                offset: 0,
-              });fetchLogs()}
-              }
+              onClick={()=>{
+                navigate("/login");
+                localStorage.removeItem('token');
+              }}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-150 shadow-sm"
             >
               Try Again

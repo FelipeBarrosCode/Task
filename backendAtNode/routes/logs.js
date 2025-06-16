@@ -173,8 +173,11 @@ router.get('/', [
     // Get total count after filtering
     const totalLogs = logs.length;
 
+    // Ensure offset doesn't exceed total logs
+    const safeOffset = Math.min(parseInt(offset), Math.max(totalLogs - 1, 0));
+    
     // Apply pagination to the filtered results
-    const paginatedLogs = logs.slice(parseInt(offset), parseInt(offset) + parseInt(limit));
+    let paginatedLogs = logs.slice(safeOffset, safeOffset + parseInt(limit));
 
     const totalPages = Math.ceil(totalLogs / limit);
 

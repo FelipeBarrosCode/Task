@@ -39,7 +39,12 @@ export const SearchEngine: React.FC<SearchEngineProps> = ({ searchParams, setSea
   const dateTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleParamChange = (param: keyof SearchParams, value: string | number | string[] | undefined) => {
-    const newParams = { ...searchParams, [param]: value };
+    const newParams = { 
+      ...searchParams,
+      [param]: value,
+      // Reset offset to 0 when any parameter changes except limit
+      offset: param === 'limit' ? searchParams.offset : 0
+    };
     setSearchParams(newParams);
   };
 
@@ -322,10 +327,10 @@ export const SearchEngine: React.FC<SearchEngineProps> = ({ searchParams, setSea
                   {tag}
                   <button 
                     onClick={() => handleTagDelete(tag)}
-                    className="ml-2 inline-flex items-center justify-center w-4 h-4 text-red-600 hover:text-white hover:bg-red-600 border border-red-300 hover:border-red-600 rounded-full transition-colors duration-150"
+                    className="ml-2 inline-flex items-center justify-center w-5 h-5 text-red-600 hover:text-white hover:bg-red-600 bg-red-50 rounded-full transition-colors duration-150"
                   >
-                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="#dc2626">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
                   </button>
                 </span>
@@ -357,12 +362,12 @@ export const SearchEngine: React.FC<SearchEngineProps> = ({ searchParams, setSea
             <button 
               type="button" 
               onClick={handleClearSearch}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-red-500 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 transition-colors duration-150 shadow-sm"
+              className="inline-flex items-center px-4 py-2 border border-red-300 text-sm font-medium rounded-md text-red-600 bg-white hover:bg-red-50 hover:text-red-700 hover:border-red-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-150 shadow-sm"
             >
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="#dc2626">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
               </svg>
-              Clear All Filters
+              Clear All
             </button>
             
             
